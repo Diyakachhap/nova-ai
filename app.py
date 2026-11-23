@@ -426,7 +426,9 @@ def make_title(text: str) -> str:
 
 def load_persisted_state() -> tuple[dict, str | None]:
     return {}, None
-    def save_persisted_state(*args, **kwargs) -> None:
+
+
+def save_persisted_state(*args, **kwargs) -> None:
     return
     
 
