@@ -14,7 +14,7 @@ from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
 BOT_NAME = "NOVA AI"
 BOT_SUBTITLE = "Multilingual AI workspace for chats, PDF / DOCX / TXT files, and images or notes."
-HISTORY_FILE = Path(__file__).resolve().parent / "nova_ai_chats.json"
+HISTORY_FILE = None
 
 if "sidebar_hidden" not in st.session_state:
     st.session_state.sidebar_hidden = False
@@ -425,62 +425,10 @@ def make_title(text: str) -> str:
 
 
 def load_persisted_state() -> tuple[dict, str | None]:
-    if not HISTORY_FILE.exists():
-        return {}, None
-    try:
-        raw = json.loads(HISTORY_FILE.read_text(encoding="utf-8"))
-        chats_data = raw.get("chats", {})
-        active_id = raw.get("active_chat_id")
-        restored = {}
-        for cid, c in chats_data.items():
-            msgs = []
-            for m in c.get("messages", []):
-                img_b64 = m.get("image_b64")
-                img_bytes = base64.b64decode(img_b64) if img_b64 else None
-                msgs.append(
-                    {
-                        "role": m.get("role", "user"),
-                        "ui_text": m.get("ui_text", ""),
-                        "lc_content": m.get("lc_content", ""),
-                        "image_bytes": img_bytes,
-                    }
-                )
-            restored[cid] = {
-                "title": c.get("title", "New Chat"),
-                "messages": msgs,
-            }
-        return restored, active_id
-    except Exception:
-        return {}, None
-
-
-def save_persisted_state():
-    try:
-        serializable_chats = {}
-        for cid, c in st.session_state.chats.items():
-            s_msgs = []
-            for m in c.get("messages", []):
-                img_bytes = m.get("image_bytes")
-                img_b64 = base64.b64encode(img_bytes).decode("utf-8") if img_bytes else None
-                s_msgs.append(
-                    {
-                        "role": m.get("role", "user"),
-                        "ui_text": m.get("ui_text", ""),
-                        "lc_content": m.get("lc_content", ""),
-                        "image_b64": img_b64,
-                    }
-                )
-            serializable_chats[cid] = {
-                "title": c.get("title", "New Chat"),
-                "messages": s_msgs,
-            }
-        payload = {
-            "active_chat_id": st.session_state.active_chat_id,
-            "chats": serializable_chats,
-        }
-        HISTORY_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    except Exception:
-        pass
+    return {}, None
+    def save_persisted_state(*args, **kwargs) -> None:
+    return
+    
 
 
 def start_new_chat(initial_prompt: str | None = None):
